@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DotsController;
+use App\Http\Controllers\PolygonsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +20,4 @@ Route::get('/', function () {
 });
 
 Route::resource('dots', DotsController::class);
+Route::resource('polygons', PolygonsController::class);

@@ -7,7 +7,9 @@
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="card-body">
-                            <form action="" method="post">
+                            <form action="{{ route('dots.store') }}" method="post">
+                                @csrf
+                                @method('POST')
                                 <div class="mb-3">
                                     <label for="place" class="form-label">Place</label>
                                     <input type="text" name="place" class="form-control" id="place"
@@ -15,7 +17,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="longitude" class="form-label">Longitude</label>
-                                    <input type="number" name="longitude" class="form-control" id="longitude"
+                                    <input type="text" name="longitude" class="form-control" id="longitude"
                                         placeholder="-6.5976236">
                                 </div>
                                 <div class="mb-3">

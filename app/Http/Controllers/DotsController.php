@@ -32,7 +32,13 @@ class DotsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Dots::create([
+            'place' => $request->place,
+            'longitude' => $request->longitude,
+            'latitude' => $request->latitude,
+        ]);
+
+        return redirect()->back();
     }
 
     /**
