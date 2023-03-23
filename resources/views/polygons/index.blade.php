@@ -7,6 +7,20 @@
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="card-body">
+                            @if ($message = Session::get('success'))
+                                <div class="alert alert-success">
+                                    <strong>{{ $message }}</strong>
+                                </div>
+                            @endif
+                            @if (count($errors) > 0)
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             <form action="{{ route('polygons.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('POST')
@@ -34,7 +48,7 @@
 
     <script>
         // Set Map View
-        var map = L.map('map').setView([-6.5976236, 106.7973811], 15);
+        var map = L.map('map').setView([42.09618442380296, -71.5045166015625], 8);
 
         // Map Layer
         var Stadia_AlidadeSmoothDark = L.tileLayer(
@@ -59,23 +73,20 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Default Marker to Kebun Raya Bogor
-        L.marker([-6.5976236, 106.7973811]).addTo(map)
-            .bindPopup('Kebun Raya Bogor')
-            .openPopup();
 
-        // Layer Options
-        var baseLayers = {
-            "OpenStreetMap": osm,
-            "Dark Map": Stadia_AlidadeSmoothDark,
-            "Stamen Toner Map": Stamen_Toner
-        };
+        // Polygon Layer
+        var shpfile = new L.Shapefile('{{ asset('geojsons/' . $geojsons['geojson']) }}', {
+			onEachFeature: function(feature, layer) {
+				if (feature.properties) {
+					layer.bindPopup(Object.keys(feature.properties).map(function(k) {
+						return k + ": " + feature.properties[k];
+					}).join("<br />"), {
+						maxHeight: 200
+					});
+				}
+			}
+		});
+        shpfile.addTo(map);
 
-        var overlays = {
-            // "Marker": marker,
-            // "Polygon": polygon
-        };
-
-        L.control.layers(baseLayers, overlays).addTo(map);
     </script>
 @endsection

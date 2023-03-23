@@ -70,10 +70,10 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Default Marker to Kebun Raya Bogor
-        L.marker([-6.5976236, 106.7973811]).addTo(map)
-            .bindPopup('Kebun Raya Bogor')
-            .openPopup();
+        // // Default Marker to Kebun Raya Bogor
+        // L.marker([-6.5976236, 106.7973811]).addTo(map)
+        //     .bindPopup('Kebun Raya Bogor')
+        //     .openPopup();
 
         // Marker Layer
         var places_Array = [];

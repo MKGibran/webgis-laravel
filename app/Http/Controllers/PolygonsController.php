@@ -12,10 +12,13 @@ class PolygonsController extends Controller
      */
     public function index()
     {
-        $polygons = Polygons::get()->toArray();
+        $polygons = Polygons::first();
+        if(!$polygons){
+            $polygons = ['geojson' => ''];
+        }
         return view('polygons.index', [
             'title' => 'Polygons',
-            'polygons'  => $polygons
+            'geojsons'  => $polygons
         ]);
     }
 
@@ -32,7 +35,20 @@ class PolygonsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'geojson' => 'required|mimes:zip,rar'
+        ]);
+        if ($request->file('geojson')) {
+            $image = $request->file('geojson')->store('geojsons');
+            $path = substr($image, 9);
+            Polygons::create(
+                ['geojson' => $path]
+            );
+
+            return back()
+                ->with('success', 'File has been uploaded.')
+                ->with('file', $path);
+        }
     }
 
     /**
