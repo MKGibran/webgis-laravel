@@ -48,7 +48,7 @@
 
     <script>
         // Set Map View
-        var map = L.map('map').setView([42.09618442380296, -71.5045166015625], 8);
+        var map = L.map('map').setView([-6.5976236, 106.7973811], 15);
 
         // Map Layer
         var Stadia_AlidadeSmoothDark = L.tileLayer(
@@ -73,20 +73,36 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
+        // Marker Layer
+        var places_Array = [];
+        for (const places of <?= json_encode($dots) ?>) {
+            var place = L.marker([places.longitude, places.latitude]).bindPopup(places.place);
+            places_Array.push(place);
+        }
+        var marker = L.layerGroup(places_Array);
+        console.log(marker);
 
-        // Polygon Layer
-        var shpfile = new L.Shapefile('{{ asset('geojsons/' . $geojsons['geojson']) }}', {
-			onEachFeature: function(feature, layer) {
-				if (feature.properties) {
-					layer.bindPopup(Object.keys(feature.properties).map(function(k) {
-						return k + ": " + feature.properties[k];
-					}).join("<br />"), {
-						maxHeight: 200
-					});
-				}
-			}
-		});
-        shpfile.addTo(map);
+        var polygons_Array = [];
+        for (var polygons of <?= json_encode($geojsons); ?>) {
+            var geojsonFeature = polygons
+            polygons_Array.push(L.geoJSON(geojsonFeature));
+        }
+        var polygon = L.layerGroup(polygons_Array);
 
+
+        // Layer Options
+        var baseLayers = {
+            "OpenStreetMap": osm,
+            "Dark Map": Stadia_AlidadeSmoothDark,
+            "Stamen Toner Map": Stamen_Toner
+        };
+
+        var overlays = {
+            "Marker": marker,
+            "Polygon": polygon
+        };
+        console.log(overlays);
+
+        L.control.layers(baseLayers, overlays).addTo(map);
     </script>
 @endsection
